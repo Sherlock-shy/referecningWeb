@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <h1>Welcome to the Referencing Web App!</h1>
+
+    {% if not current_user.is_authenticated %}
+        <p>To add your own references, please <a href="{{ url_for('login') }}">log in</a> or <a href="{{ url_for('register') }}">register</a>.</p>
+    {% endif %}
+    
+    <p>Below are the references available to the public:</p>
+
+    {% if references %}
+    <ul>
+        {% for ref in references %}
+        <li>
+            <strong>{{ ref.title }}</strong><br>
+            URL: <a href="{{ ref.url }}" target="_blank">{{ ref.url }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No public references available.</p>
+    {% endif %}
+{% endblock %}

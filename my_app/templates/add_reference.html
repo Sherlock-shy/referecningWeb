@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Add Reference{% endblock %}
+
+{% block content %}
+    <h1>Add New Reference</h1>
+    <form method="POST" action="{{ url_for('add_reference') }}">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+        
+        <label for="url">URL:</label>
+        <input type="url" id="url" name="url" required>
+        
+        <label for="public">Make Public:</label>
+        <input type="checkbox" id="public" name="public">
+        
+        <button type="submit">Add Reference</button>
+    </form>
+
+    <a href="{{ url_for('dashboard') }}" class="button">Back to Dashboard</a>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+{% endblock %}

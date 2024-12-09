@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <h1>My Dashboard</h1>
+    <p>Here are your uploaded references:</p>
+
+    {% if references %}
+    <ul>
+        {% for ref in references %}
+        <li>
+            <strong>{{ ref.title }}</strong><br>
+            URL: <a href="{{ ref.url }}" target="_blank">{{ ref.url }}</a><br>
+            {% if ref.public %}
+                <em>Status: Public</em>
+            {% else %}
+                <em>Status: Private</em>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>You haven't added any references yet.</p>
+    {% endif %}
+
+    <a href="{{ url_for('add_reference') }}" class="button">Add New Reference</a>
+    <a href="{{ url_for('home') }}" class="button">View Public References</a>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+{% endblock %}
