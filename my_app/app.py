@@ -14,7 +14,7 @@ import validators
 import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_fallback_key')
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 db.init_app(app)
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
