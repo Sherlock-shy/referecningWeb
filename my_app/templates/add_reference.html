@@ -5,6 +5,7 @@
 {% block content %}
     <h1>Add New Reference</h1>
     <form method="POST" action="{{ url_for('add_reference') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <label for="title">Title:</label>
         <input type="text" id="title" name="title" required>
         

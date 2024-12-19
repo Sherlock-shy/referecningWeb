@@ -9,11 +9,18 @@ from flask_limiter import Limiter  # Import Flask-Limiter
 from flask_limiter.util import get_remote_address
 from datetime import datetime, timedelta
 from models import db, User, Reference
+import bleach
+import validators
+import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_fallback_key')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 db.init_app(app)
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+
 
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
@@ -96,14 +103,18 @@ def dashboard():
 @login_required
 def add_reference():
     if request.method == 'POST':
-        title = request.form['title']
-        url = request.form['url']
+        title = bleach.clean(request.form['title'])
+        url = bleach.clean(request.form['url'])
         public = 'public' in request.form
         reference = Reference(title=title, url=url, public=public, user_id=current_user.id)
         db.session.add(reference)
         db.session.commit()
-        flash('Reference added successfully!', 'success')
-        return redirect(url_for('dashboard'))
+        if not validators.url(request.form['url']):
+            flash('Invalid URL format', 'danger')
+            return redirect(url_for('add_reference'))
+        else:
+            flash('Reference added successfully!', 'success')
+            return redirect(url_for('dashboard'))
     return render_template('add_reference.html')
 
 @app.route('/logout')
@@ -116,4 +127,4 @@ def csrf_error(error):
     return render_template('csrf_error.html'), 400
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
